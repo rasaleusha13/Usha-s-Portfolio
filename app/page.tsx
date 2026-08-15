@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 
-const githubUrl = "https://github.com/rasaleusha13/";
+const githubUrl = "https://github.com/rasaleusha13";
 const linkedinUrl = "https://www.linkedin.com/in/usharasale10/";
 const emailUrl = "mailto:rasaleuhsa13@gmail.com";
 
@@ -467,6 +467,14 @@ export default function Home() {
   const [search, setSearch] = useState("");
   const [language, setLanguage] = useState("All");
 
+  /* Modern interaction state */
+  const [navScrolled, setNavScrolled] = useState(false);
+  const [showBackToTop, setShowBackToTop] = useState(false);
+
+  /* =====================================================
+     LOAD GITHUB REPOSITORIES
+  ===================================================== */
+
   useEffect(() => {
     async function loadRepositories() {
       try {
@@ -497,8 +505,8 @@ export default function Home() {
           allRepos.filter(
             (repo) =>
               !repo.fork &&
-              repo.name !== "usha-portfolio"
-          )
+              repo.name !== "usha-portfolio",
+          ),
         );
       } catch {
         setRepoError(
@@ -512,6 +520,61 @@ export default function Home() {
     loadRepositories();
   }, []);
 
+  /* =====================================================
+     NAVIGATION / BACK TO TOP
+  ===================================================== */
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setNavScrolled(window.scrollY > 30);
+      setShowBackToTop(window.scrollY > 500);
+    };
+
+    window.addEventListener("scroll", handleScroll, {
+      passive: true,
+    });
+
+    handleScroll();
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  /* =====================================================
+     SCROLL REVEAL
+  ===================================================== */
+
+  useEffect(() => {
+    const elements = document.querySelectorAll(
+      ".reveal-section, .reveal-card",
+    );
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        threshold: 0.12,
+      },
+    );
+
+    elements.forEach((element) => observer.observe(element));
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
+  /* =====================================================
+     LANGUAGES
+  ===================================================== */
+
   const languages = useMemo(() => {
     const values = repositories
       .map((repo) => repo.language)
@@ -519,6 +582,10 @@ export default function Home() {
 
     return ["All", ...Array.from(new Set(values)).sort()];
   }, [repositories]);
+
+  /* =====================================================
+     FILTERED REPOSITORIES
+  ===================================================== */
 
   const filteredRepositories = useMemo(() => {
     return repositories.filter((repo) => {
@@ -563,59 +630,65 @@ export default function Home() {
           NAVIGATION
       ===================================================== */}
 
-      <header className="mx-auto flex max-w-[1400px] items-center justify-between px-8 py-7 lg:px-12">
-        <a
-          href="#top"
-          className="text-[42px] font-bold leading-none tracking-[-0.05em] text-[#282238]"
-        >
-          Usha<span className="text-[#9274c8]">.</span>
-        </a>
-
-        <nav className="hidden items-center gap-10 text-[17px] text-[#5c526f] md:flex">
+      <header
+        className={`portfolio-nav fixed left-0 right-0 top-0 z-50 border-b border-transparent ${
+          navScrolled ? "scrolled" : ""
+        }`}
+      >
+        <div className="mx-auto flex max-w-[1400px] items-center justify-between px-8 py-7 lg:px-12">
           <a
-            href="#engineering"
-            className="transition hover:text-[#8b70be]"
+            href="#top"
+            className="text-[42px] font-bold leading-none tracking-[-0.05em] text-[#282238]"
           >
-            Engineering
+            Usha<span className="text-[#9274c8]">.</span>
           </a>
 
-          <a
-            href="#projects"
-            className="transition hover:text-[#8b70be]"
-          >
-            Work
-          </a>
+          <nav className="hidden items-center gap-10 text-[17px] text-[#5c526f] md:flex">
+            <a
+              href="#engineering"
+              className="nav-link transition hover:text-[#8b70be]"
+            >
+              Engineering
+            </a>
+
+            <a
+              href="#projects"
+              className="nav-link transition hover:text-[#8b70be]"
+            >
+              Work
+            </a>
+
+            <a
+              href="#technologies"
+              className="nav-link transition hover:text-[#8b70be]"
+            >
+              Skills
+            </a>
+
+            <a
+              href="#repositories"
+              className="nav-link transition hover:text-[#8b70be]"
+            >
+              GitHub
+            </a>
+
+            <a
+              href="#contact"
+              className="nav-link transition hover:text-[#8b70be]"
+            >
+              Connect
+            </a>
+          </nav>
 
           <a
-            href="#technologies"
-            className="transition hover:text-[#8b70be]"
+            href={githubUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="rounded-full border border-[#d8d0df] bg-white/50 px-6 py-3 text-[16px] font-medium text-[#41374f] shadow-sm transition hover:border-[#a88bd1] hover:text-[#8065b2]"
           >
-            Skills
+            GitHub ↗
           </a>
-
-          <a
-            href="#repositories"
-            className="transition hover:text-[#8b70be]"
-          >
-            GitHub
-          </a>
-
-          <a
-            href="#contact"
-            className="transition hover:text-[#8b70be]"
-          >
-            Connect
-          </a>
-        </nav>
-
-        <a
-          href={githubUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="rounded-full border border-[#d8d0df] bg-white/50 px-6 py-3 text-[16px] font-medium text-[#41374f] shadow-sm transition hover:border-[#a88bd1] hover:text-[#8065b2]"
-        >
-          GitHub ↗
-        </a>
+        </div>
       </header>
 
       {/* =====================================================
@@ -624,7 +697,7 @@ export default function Home() {
 
       <section
         id="hero"
-        className="mx-auto grid min-h-[calc(100vh-100px)] max-w-[1400px] items-center gap-20 px-8 py-16 lg:grid-cols-[0.95fr_1.05fr] lg:px-12 lg:py-20"
+        className="mx-auto grid min-h-[calc(100vh-100px)] max-w-[1400px] items-center gap-20 px-8 pb-16 pt-32 lg:grid-cols-[0.95fr_1.05fr] lg:px-12 lg:py-20"
       >
         {/* LEFT */}
 
@@ -656,7 +729,7 @@ export default function Home() {
           <div className="mt-10 flex flex-wrap gap-4">
             <a
               href="#projects"
-              className="rounded-full bg-[#9274c8] px-8 py-4 text-[17px] font-semibold text-white shadow-[0_12px_30px_rgba(146,116,200,0.25)] transition hover:-translate-y-0.5 hover:bg-[#8566bd]"
+              className="modern-button rounded-full bg-[#9274c8] px-8 py-4 text-[17px] font-semibold text-white shadow-[0_12px_30px_rgba(146,116,200,0.25)] transition hover:bg-[#8566bd]"
             >
               Explore my work →
             </a>
@@ -665,7 +738,7 @@ export default function Home() {
               href={linkedinUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="rounded-full border border-[#d7cedf] bg-white/50 px-8 py-4 text-[17px] font-semibold text-[#4a4058] transition hover:-translate-y-0.5 hover:border-[#aa91d0] hover:text-[#8064ae]"
+              className="modern-button rounded-full border border-[#d7cedf] bg-white/50 px-8 py-4 text-[17px] font-semibold text-[#4a4058] transition hover:border-[#aa91d0] hover:text-[#8064ae]"
             >
               LinkedIn ↗
             </a>
@@ -700,7 +773,7 @@ export default function Home() {
               </div>
 
               <div className="flex items-center gap-2 text-[13px] font-semibold uppercase tracking-[0.20em] text-[#669985]">
-                <span className="h-2.5 w-2.5 rounded-full bg-[#82bea5]" />
+                <span className="ai-online-dot h-2.5 w-2.5 rounded-full bg-[#82bea5]" />
                 ONLINE
               </div>
             </div>
@@ -711,7 +784,7 @@ export default function Home() {
               {/* Input / Context */}
 
               <div className="grid grid-cols-2 gap-6">
-                <div className="rounded-2xl border border-[#ded5e6] bg-white px-5 py-5 shadow-sm">
+                <div className="modern-card rounded-2xl border border-[#ded5e6] bg-white px-5 py-5 shadow-sm">
                   <div className="flex items-center gap-4">
                     <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#eee7fb] text-[20px] text-[#8b70be]">
                       →
@@ -729,7 +802,7 @@ export default function Home() {
                   </div>
                 </div>
 
-                <div className="rounded-2xl border border-[#ded5e6] bg-white px-5 py-5 shadow-sm">
+                <div className="modern-card rounded-2xl border border-[#ded5e6] bg-white px-5 py-5 shadow-sm">
                   <div className="flex items-center gap-4">
                     <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#eaf5f1] text-[20px] text-[#71a68e]">
                       +
@@ -754,7 +827,7 @@ export default function Home() {
 
               {/* Retrieval */}
 
-              <div className="mx-auto max-w-[430px] rounded-2xl border border-[#d8c8ea] bg-[#f4eefb] px-6 py-6 shadow-sm">
+              <div className="modern-card mx-auto max-w-[430px] rounded-2xl border border-[#d8c8ea] bg-[#f4eefb] px-6 py-6 shadow-sm">
                 <div className="flex items-center gap-5">
                   <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white text-[18px] text-[#9274c8] shadow-sm">
                     ⌕
@@ -782,7 +855,7 @@ export default function Home() {
 
               {/* LLM */}
 
-              <div className="mx-auto flex h-[92px] w-[92px] flex-col items-center justify-center rounded-[24px] border border-[#c9b8e5] bg-[#eee7fb] shadow-[0_10px_30px_rgba(145,116,190,0.15)]">
+              <div className="llm-node mx-auto flex h-[92px] w-[92px] flex-col items-center justify-center rounded-[24px] border border-[#c9b8e5] bg-[#eee7fb]">
                 <span className="text-[17px] font-semibold tracking-[0.22em] text-[#8469b6]">
                   LLM
                 </span>
@@ -802,7 +875,7 @@ export default function Home() {
 
               {/* Output */}
 
-              <div className="mx-auto max-w-[430px] rounded-2xl border border-[#c8e0d8] bg-[#edf8f4] px-6 py-6 shadow-sm">
+              <div className="modern-card mx-auto max-w-[430px] rounded-2xl border border-[#c8e0d8] bg-[#edf8f4] px-6 py-6 shadow-sm">
                 <div className="flex items-center gap-5">
                   <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white text-[20px] text-[#70a68e] shadow-sm">
                     ✓
@@ -834,7 +907,7 @@ export default function Home() {
 
       <section
         id="engineering"
-        className="mx-auto max-w-[1400px] border-t border-[#e5dde8] px-8 py-28 lg:px-12"
+        className="reveal-section mx-auto max-w-[1400px] border-t border-[#e5dde8] px-8 py-28 lg:px-12"
       >
         <div className="grid gap-16 lg:grid-cols-[0.7fr_1.3fr] lg:items-center">
           <div>
@@ -852,7 +925,7 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="rounded-[28px] border border-[#ddd4e2] bg-white/60 p-8 shadow-[0_20px_60px_rgba(100,82,120,0.08)]">
+          <div className="modern-card rounded-[28px] border border-[#ddd4e2] bg-white/60 p-8 shadow-[0_20px_60px_rgba(100,82,120,0.08)]">
             <div className="grid grid-cols-3 gap-4">
               {[
                 ["01", "DATA"],
@@ -906,7 +979,7 @@ export default function Home() {
 
       <section
         id="capabilities"
-        className="mx-auto max-w-[1400px] border-t border-[#e5dde8] px-8 py-28 lg:px-12"
+        className="reveal-section mx-auto max-w-[1400px] border-t border-[#e5dde8] px-8 py-28 lg:px-12"
       >
         <div className="grid gap-14 lg:grid-cols-[0.7fr_1.3fr]">
           <div>
@@ -923,7 +996,7 @@ export default function Home() {
             {capabilities.map((item) => (
               <div
                 key={item.number}
-                className="group border-b border-r border-[#e2dbe7] bg-white/40 p-8 transition hover:bg-[#f6f0fa]"
+                className="reveal-card group border-b border-r border-[#e2dbe7] bg-white/40 p-8 transition hover:bg-[#f6f0fa]"
               >
                 <span className="text-[13px] text-[#a095ad]">
                   {item.number}
@@ -948,7 +1021,7 @@ export default function Home() {
 
       <section
         id="projects"
-        className="mx-auto max-w-[1400px] border-t border-[#e5dde8] px-8 py-28 lg:px-12"
+        className="reveal-section mx-auto max-w-[1400px] border-t border-[#e5dde8] px-8 py-28 lg:px-12"
       >
         <p className="text-[22px] font-semibold uppercase tracking-[0.20em] text-[#8a70c1]">
           Selected Work
@@ -962,7 +1035,7 @@ export default function Home() {
           {featuredProjects.map((project) => (
             <article
               key={project.number}
-              className="group rounded-[28px] border border-[#ddd4e2] bg-white/60 p-8 shadow-[0_20px_60px_rgba(100,82,120,0.06)] transition hover:-translate-y-1 hover:border-[#c9b8dc] sm:p-10"
+              className="reveal-card modern-card group rounded-[28px] border border-[#ddd4e2] bg-white/60 p-8 shadow-[0_20px_60px_rgba(100,82,120,0.06)] sm:p-10"
             >
               <div className="flex justify-between">
                 <span className="text-[13px] text-[#a095ad]">
@@ -1010,7 +1083,7 @@ export default function Home() {
                 {project.stack.map((tool) => (
                   <span
                     key={tool}
-                    className="rounded-full border border-[#ddd4e2] bg-white px-4 py-2 text-[16px] text-[#6c6178]"
+                    className="skill-tag rounded-full border border-[#ddd4e2] bg-white px-4 py-2 text-[16px] text-[#6c6178]"
                   >
                     {tool}
                   </span>
@@ -1021,7 +1094,7 @@ export default function Home() {
                 href={project.github}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-8 inline-flex rounded-full border border-[#d2c7dc] px-6 py-3 text-[16px] font-medium text-[#574c64] transition hover:border-[#9d80c7] hover:text-[#8065b0]"
+                className="modern-button mt-8 inline-flex rounded-full border border-[#d2c7dc] px-6 py-3 text-[16px] font-medium text-[#574c64] transition hover:border-[#9d80c7] hover:text-[#8065b0]"
               >
                 Explore repository ↗
               </a>
@@ -1036,7 +1109,7 @@ export default function Home() {
 
       <section
         id="technologies"
-        className="mx-auto max-w-[1400px] border-t border-[#e5dde8] px-8 py-28 lg:px-12"
+        className="reveal-section mx-auto max-w-[1400px] border-t border-[#e5dde8] px-8 py-28 lg:px-12"
       >
         <p className="text-[22px] font-semibold uppercase tracking-[0.20em] text-[#8a70c1]">
           Skills & Expertise
@@ -1064,7 +1137,7 @@ export default function Home() {
           {technologyGroups.map((group, index) => (
             <div
               key={group.title}
-              className="rounded-[24px] border border-[#ddd4e2] bg-white/60 p-7 shadow-sm"
+              className="reveal-card modern-card rounded-[24px] border border-[#ddd4e2] bg-white/60 p-7 shadow-sm"
             >
               <div className="mb-6 flex items-center justify-between">
                 <h3 className="text-[22px] font-semibold text-[#40364d]">
@@ -1080,7 +1153,7 @@ export default function Home() {
                 {group.technologies.map((tool) => (
                   <span
                     key={tool}
-                    className="rounded-full border border-[#ddd4e2] bg-[#fbfafc] px-4 py-2.5 text-[16px] text-[#625770] transition hover:border-[#b69bd4] hover:bg-[#f6f0fa] hover:text-[#8065b0]"
+                    className="skill-tag rounded-full border border-[#ddd4e2] bg-[#fbfafc] px-4 py-2.5 text-[16px] text-[#625770] transition hover:border-[#b69bd4] hover:bg-[#f6f0fa] hover:text-[#8065b0]"
                   >
                     {tool}
                   </span>
@@ -1097,7 +1170,7 @@ export default function Home() {
 
       <section
         id="repositories"
-        className="mx-auto max-w-[1400px] border-t border-[#e5dde8] px-8 py-28 lg:px-12"
+        className="reveal-section mx-auto max-w-[1400px] border-t border-[#e5dde8] px-8 py-28 lg:px-12"
       >
         <p className="text-[22px] font-semibold uppercase tracking-[0.20em] text-[#8a70c1]">
           GitHub / All Work
@@ -1114,7 +1187,7 @@ export default function Home() {
             href={githubUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="w-fit rounded-full border border-[#d7cedf] bg-white/50 px-6 py-3 text-[16px] text-[#5f536d] transition hover:border-[#a88bd1] hover:text-[#8065b0]"
+            className="modern-button w-fit rounded-full border border-[#d7cedf] bg-white/50 px-6 py-3 text-[16px] text-[#5f536d] transition hover:border-[#a88bd1] hover:text-[#8065b0]"
           >
             Open GitHub ↗
           </a>
@@ -1201,7 +1274,6 @@ export default function Home() {
             !repoError &&
             filteredRepositories.map((repo, index) => {
               const technologies = getRepositoryTechnologies(repo.name);
-
               const category = getRepositoryCategory(repo.name);
 
               return (
@@ -1210,7 +1282,7 @@ export default function Home() {
                   href={repo.html_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`group block p-8 transition hover:bg-[#faf7fc] ${
+                  className={`reveal-card group block p-8 transition hover:bg-[#faf7fc] ${
                     index !== filteredRepositories.length - 1
                       ? "border-b border-[#e4dce8]"
                       : ""
@@ -1261,7 +1333,7 @@ export default function Home() {
                         {technologies.map((tool) => (
                           <span
                             key={tool}
-                            className="rounded-full border border-[#ddd4e2] bg-white px-3.5 py-2 text-[15px] text-[#6c6178] transition group-hover:border-[#c9b8d9]"
+                            className="skill-tag rounded-full border border-[#ddd4e2] bg-white px-3.5 py-2 text-[15px] text-[#6c6178] transition group-hover:border-[#c9b8d9]"
                           >
                             {tool}
                           </span>
@@ -1287,7 +1359,7 @@ export default function Home() {
 
       <section
         id="contact"
-        className="mx-auto max-w-[1400px] border-t border-[#e5dde8] px-8 py-28 lg:px-12"
+        className="reveal-section mx-auto max-w-[1400px] border-t border-[#e5dde8] px-8 py-28 lg:px-12"
       >
         <div className="relative overflow-hidden rounded-[30px] border border-[#ddd4e2] bg-white/60 p-10 shadow-[0_20px_70px_rgba(100,82,120,0.08)] sm:p-16">
           <div className="absolute right-0 top-0 h-80 w-80 rounded-full bg-[#d8c8eb]/25 blur-[100px]" />
@@ -1310,7 +1382,7 @@ export default function Home() {
             <div className="mt-9 flex flex-wrap gap-4">
               <a
                 href={emailUrl}
-                className="rounded-full bg-[#9274c8] px-8 py-4 text-[17px] font-semibold text-white shadow-[0_12px_30px_rgba(146,116,200,0.20)] transition hover:bg-[#8566bd]"
+                className="modern-button rounded-full bg-[#9274c8] px-8 py-4 text-[17px] font-semibold text-white shadow-[0_12px_30px_rgba(146,116,200,0.20)] transition hover:bg-[#8566bd]"
               >
                 Start a conversation
               </a>
@@ -1319,7 +1391,7 @@ export default function Home() {
                 href={linkedinUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="rounded-full border border-[#d7cedf] bg-white px-8 py-4 text-[17px] font-semibold text-[#51465e] transition hover:border-[#aa91d0] hover:text-[#8065b0]"
+                className="modern-button rounded-full border border-[#d7cedf] bg-white px-8 py-4 text-[17px] font-semibold text-[#51465e] transition hover:border-[#aa91d0] hover:text-[#8065b0]"
               >
                 LinkedIn ↗
               </a>
@@ -1350,6 +1422,26 @@ export default function Home() {
           GitHub ↗
         </a>
       </footer>
+
+      {/* =====================================================
+          BACK TO TOP
+      ===================================================== */}
+
+      <button
+        type="button"
+        onClick={() =>
+          window.scrollTo({
+            top: 0,
+            behavior: "smooth",
+          })
+        }
+        aria-label="Back to top"
+        className={`back-to-top ${
+          showBackToTop ? "visible" : ""
+        } fixed bottom-7 right-7 z-40 flex h-12 w-12 items-center justify-center rounded-full border border-[#d7cedf] bg-white/90 text-[20px] text-[#665a73] shadow-[0_10px_30px_rgba(80,65,100,0.12)] backdrop-blur-sm transition hover:-translate-y-1 hover:border-[#a88bd1] hover:text-[#8065b0]`}
+      >
+        ↑
+      </button>
     </main>
   );
 }
