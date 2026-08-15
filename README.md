@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Usha — AI / ML Engineer Portfolio
 
-## Getting Started
+Personal portfolio showcasing my work across Generative AI, LLM applications, RAG, Agentic AI, Machine Learning, Python engineering, APIs, and cloud platforms.
 
-First, run the development server:
+## Portfolio
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+🌐 **Live Portfolio:** https://usha-portfolio-usha17.vercel.app
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Featured Projects
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Enterprise RAG Intelligence Platform
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+A production-style Retrieval-Augmented Generation platform designed to provide grounded answers from enterprise documents and knowledge sources.
 
-## Learn More
+The system combines document processing, semantic search, vector embeddings, retrieval, and LLM generation to reduce unsupported responses and improve knowledge-grounded answers.
 
-To learn more about Next.js, take a look at the following resources:
+**Technologies:** Python, FastAPI, RAG, OpenAI, Sentence Transformers, FAISS
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Conversational Intent & Agent Assist
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+An NLP and machine learning platform that classifies customer messages into business intents and provides recommended actions to customer service agents.
 
-## Deploy on Vercel
+The model uses text preprocessing, TF-IDF feature extraction, and classification to identify customer intent and support agent decision-making.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+**Technologies:** Python, FastAPI, Pandas, Scikit-learn, spaCy, TF-IDF, Logistic Regression, Joblib
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Provider Billing Integrity Platform
+
+A machine learning platform focused on identifying anomalous provider billing patterns and generating provider risk scores.
+
+The model applies anomaly detection techniques to billing data to surface unusual patterns that can support healthcare billing review and investigation.
+
+**Technologies:** Python, FastAPI, Pandas, Scikit-learn, Isolation Forest, Machine Learning
+
+### Loan Risk Prediction API
+
+A machine learning API that evaluates loan applicant information and produces a risk prediction based on financial and credit-related features.
+
+The project demonstrates the complete path from model training and feature processing to REST-based inference through a production-style Python API.
+
+**Technologies:** Python, FastAPI, Pandas, Scikit-learn, Joblib
+
+## Skills
+
+- Generative AI & LLM Applications
+- Retrieval-Augmented Generation (RAG)
+- Agentic AI & Multi-Agent Workflows
+- Machine Learning
+- Natural Language Processing
+- Python Engineering
+- FastAPI & REST APIs
+- Data Engineering
+- Cloud & MLOps
+- Vector Search & Semantic Search
+
+## Technology
+
+Python · SQL · FastAPI · Flask · OpenAI · LangChain · LangGraph · LlamaIndex · Scikit-learn · PyTorch · TensorFlow · PySpark · Apache Spark · Kafka · FAISS · Pinecone · Qdrant · AWS · Azure · GCP · Docker · Kubernetes · MLflow · GitHub Actions
+
+## Contact
+
+**Portfolio:** https://usha-portfolio-usha17.vercel.app
+
+**GitHub:** https://github.com/rasaleusha13
